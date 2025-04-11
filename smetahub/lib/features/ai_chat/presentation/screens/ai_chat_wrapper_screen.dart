@@ -32,6 +32,9 @@ class AiChatWrapperScreen extends StatelessWidget implements AutoRouteWrapper {
         )
         ..add(
           GetAllAiAgentsEvent(),
+        )
+        ..add(
+          GetUserChatsEvent(),
         ),
       child: const AutoRouter(),
     );

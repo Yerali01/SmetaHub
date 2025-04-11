@@ -16,7 +16,8 @@ abstract interface class Api {
 
   Future<dynamic> userSignUp({
     String? countryCode,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {}
 
   Future<dynamic> setPassword({
@@ -27,7 +28,8 @@ abstract interface class Api {
   Future<dynamic> userSignIn({
     String? countryCode,
     required String password,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {}
 
   Future<dynamic> resetPasswordConfirm({
@@ -36,20 +38,24 @@ abstract interface class Api {
   }) async {}
 
   Future<dynamic> resetPasswordRequest({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {}
 
   Future<dynamic> sendVerificationCode({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {}
 
   Future<dynamic> verifyPhoneNumber({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String code,
   }) async {}
 
   Future<dynamic> verifyResetCode({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String code,
   }) async {}
 
@@ -174,6 +180,11 @@ abstract interface class Api {
     required String title,
     int? projectId,
     required int aiAgentId,
+    required String accessToken,
+  }) async {}
+
+  Future<dynamic> deleteChat({
+    required int chatId,
     required String accessToken,
   }) async {}
 

@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 import 'package:smetahub/core/services/router/app_router.dart';
 import 'package:smetahub/core/utils/app_typography.dart';
 import 'package:smetahub/core/utils/colors.dart';
-import 'package:smetahub/core/utils/overlay_app.dart';
 import 'package:smetahub/core/widgets/default_button_widget.dart';
 import 'package:smetahub/features/create_project/domain/models/project_model.dart';
 import 'package:smetahub/features/create_smeta/presentation/bloc/create_smeta_bloc.dart';
@@ -57,15 +56,16 @@ class _CreateSmetaScreenState extends State<CreateSmetaScreen> {
             if (state.currentPage == 0) {
               final List<ProjectModel> projects = state.projects;
 
-              return SizedBox(
+              return Container(
                 height: MediaQuery.of(context).size.height,
-                child: ListView(
+                child: Stack(
                   children: [
                     ListView(
                       padding: EdgeInsets.only(
                         top: 20.h,
                         left: 15.w,
                         right: 15.w,
+                        bottom: 170.h,
                       ),
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -139,48 +139,51 @@ class _CreateSmetaScreenState extends State<CreateSmetaScreen> {
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: AppColors.uiBgPanels,
-                        border: Border.symmetric(
-                          horizontal: BorderSide(color: AppColors.uiBorder),
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: AppColors.uiBgPanels,
+                          border: Border.symmetric(
+                            horizontal: BorderSide(color: AppColors.uiBorder),
+                          ),
                         ),
-                      ),
-                      height: 148.h,
-                      width: 375.w,
-                      padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(
-                        top: 8.h,
-                      ),
-                      child: Column(
-                        children: [
-                          DefaultButtonWidget(
-                            onTap: () {
-                              context.read<CreateSmetaBloc>().add(
-                                    CreateUserSmetaEvent(
-                                      projectId: state.selectedProject?.id,
-                                    ),
-                                  );
-                            },
-                            backgroundColor: AppColors.buttonPrimaryBg,
-                            buttonText: 'Далее',
-                            textStyle: AppTypography.headlineRegular
-                                .copyWith(color: AppColors.buttonPrimaryText),
-                          ),
-                          Gap(10.h),
-                          DefaultButtonWidget(
-                            onTap: () {
-                              context.read<CreateSmetaBloc>().add(
-                                    GetWorkTypesEvent(),
-                                  );
-                            },
-                            backgroundColor: AppColors.buttonSecondaryBg,
-                            buttonText: 'Пропустить',
-                            textStyle: AppTypography.headlineRegular
-                                .copyWith(color: AppColors.textPrimary),
-                            borderColor: AppColors.buttonSecondaryBorder,
-                          ),
-                        ],
+                        height: 148.h,
+                        width: 375.w,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15.w).copyWith(
+                          top: 8.h,
+                        ),
+                        child: Column(
+                          children: [
+                            DefaultButtonWidget(
+                              onTap: () {
+                                context.read<CreateSmetaBloc>().add(
+                                      CreateUserSmetaEvent(
+                                        projectId: state.selectedProject?.id,
+                                      ),
+                                    );
+                              },
+                              backgroundColor: AppColors.buttonPrimaryBg,
+                              buttonText: 'Далее',
+                              textStyle: AppTypography.headlineRegular
+                                  .copyWith(color: AppColors.buttonPrimaryText),
+                            ),
+                            Gap(10.h),
+                            DefaultButtonWidget(
+                              onTap: () {
+                                context.read<CreateSmetaBloc>().add(
+                                      GetWorkTypesEvent(),
+                                    );
+                              },
+                              backgroundColor: AppColors.buttonSecondaryBg,
+                              buttonText: 'Пропустить',
+                              textStyle: AppTypography.headlineRegular
+                                  .copyWith(color: AppColors.textPrimary),
+                              borderColor: AppColors.buttonSecondaryBorder,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

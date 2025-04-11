@@ -1,11 +1,19 @@
-class Message {
-  final String text;
-  final bool isUserMessage;
-  final DateTime timestamp;
+class MessageModel {
+  final int chatId;
+  final Map<String, dynamic> content;
+  final String role;
 
-  Message({
-    required this.text,
-    required this.isUserMessage,
-    DateTime? timestamp,
-  }) : timestamp = timestamp ?? DateTime.now();
+  MessageModel({
+    required this.chatId,
+    required this.content,
+    required this.role,
+  });
+
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      chatId: json['chat_id'],
+      content: json['content'],
+      role: json['role'],
+    );
+  }
 }

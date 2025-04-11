@@ -14,6 +14,7 @@ class ProjectModel {
   final ObjectConditionModel? objectCondition;
   final List<dynamic>? files;
   final String? status;
+  final String? ruStatus;
   final TechConditionModel? technicalConditions;
   final List<dynamic>? aiAgents;
 
@@ -26,6 +27,7 @@ class ProjectModel {
     this.objectCondition,
     this.files,
     this.status,
+    this.ruStatus,
     this.technicalConditions,
     this.aiAgents,
   });
@@ -44,6 +46,7 @@ class ProjectModel {
             }).toList()
           : [],
       status: json['status'],
+      ruStatus: json['ru_status'],
       technicalConditions:
           TechConditionModel.fromJson(json['technical_conditions']),
       aiAgents: json['agents'] != null

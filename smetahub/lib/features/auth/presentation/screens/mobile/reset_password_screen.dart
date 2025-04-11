@@ -21,7 +21,8 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  final TextEditingController phoneController = TextEditingController();
+  // final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController newPasswordSecondController =
       TextEditingController();
@@ -76,24 +77,29 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     const ResetPasswordAppbar(percentage: 0),
                     Gap(22.h),
                     Text(
-                      'Введите свой номер телефона',
+                      'Введите свою почту',
                       style: AppTypography.h5Bold
                           .copyWith(color: AppColors.textPrimary),
                     ),
                     Gap(24.h),
                     DefaultTextFormField(
-                      isPhone: true,
-                      hintText: 'Номер телефона',
-                      controller: phoneController,
+                      // isPhone: true,
+                      isEmail: true,
+                      hintText: 'Почта',
+                      // controller: phoneController,
+                      controller: emailController,
                     ),
                     const Spacer(),
                     DefaultButtonWidget(
                       onTap: () {
-                        if (phoneController.text.length == 16) {
+                        // if (phoneController.text.length == 16) {
+                        if (emailController.text.isNotEmpty) {
                           context.read<AuthBloc>().add(
                                 ResetPasswordRequestEvent(
-                                  phoneNumber:
-                                      phoneController.text.replaceAll(" ", ''),
+                                  // phoneNumber:
+                                  // phoneController.text.replaceAll(" ", ''),
+                                  email:
+                                      emailController.text.replaceAll(" ", ''),
                                 ),
                               );
                         }
@@ -125,14 +131,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     Gap(12.h),
                     RichText(
                       text: TextSpan(
-                        text:
-                            'Введите код отправленный\nна ваш номер телефона ',
+                        text: 'Введите код отправленный\nна вашу почту',
                         style: AppTypography.bodyRegular.copyWith(
                           color: AppColors.textPrimary,
                         ),
                         children: [
                           TextSpan(
-                            text: phoneController.text,
+                            // text: phoneController.text,
+                            text: emailController.text,
                             style: AppTypography.bodyMedium
                                 .copyWith(color: AppColors.textPrimary),
                           ),
@@ -157,7 +163,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     GestureDetector(
                       onTap: () {
                         context.read<AuthBloc>().add(
-                              SendSMSCodeEvent(phoneNumber: state.phoneNumber),
+                              SendSMSCodeEvent(
+                                // phoneNumber: state.phoneNumber,
+                                email: state.email,
+                              ),
                             );
                       },
                       child: Container(

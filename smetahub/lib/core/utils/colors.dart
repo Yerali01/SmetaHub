@@ -55,6 +55,7 @@ abstract class AppColors {
   static const Color purple900 = Color(0xFF341C3C);
 
   static const Color red700 = Color.fromRGBO(225, 31, 63, 1);
+  static const Color buttonSecondaryPressed = Color(0xFFFFE2F4);
   static const Color red700A18 = Color.fromRGBO(225, 31, 63, 0.18);
 
   static const Color yellow600 = Color.fromRGBO(244, 140, 17, 1);

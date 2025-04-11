@@ -158,6 +158,7 @@ class NetworkApi implements Api {
             options: options,
           );
     } on DioException catch (e) {
+      log('E $e');
       // if (e.response?.statusCode == 401) {
       //   // Token expired, try to refresh it
       //   final newToken = await refreshTokenRequest();
@@ -365,13 +366,15 @@ class NetworkApi implements Api {
 
   @override
   Future<dynamic> resetPasswordRequest({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       final Response<dynamic> data = await postRequest(
         path: Urls.resetPasswordRequest,
         body: <String, dynamic>{
-          'phone_number': phoneNumber,
+          // 'phone_number': phoneNumber,
+          'email': email,
         },
       );
 
@@ -388,13 +391,15 @@ class NetworkApi implements Api {
 
   @override
   Future<dynamic> sendVerificationCode({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       final Response<dynamic> data = await postRequest(
         path: Urls.sendVerification,
         body: <String, dynamic>{
-          'phone_number': phoneNumber,
+          // 'phone_number': phoneNumber,
+          'email': email,
         },
       );
 
@@ -412,15 +417,16 @@ class NetworkApi implements Api {
   @override
   Future<dynamic> userSignUp({
     String? countryCode,
-    // required String password,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       final Response<dynamic> data = await postRequest(
         path: Urls.register,
         body: <String, dynamic>{
-          'country_code': countryCode,
-          'phone_number': phoneNumber,
+          // 'country_code': countryCode,
+          // 'phone_number': phoneNumber,
+          'email': email,
         },
       );
 
@@ -439,15 +445,17 @@ class NetworkApi implements Api {
   Future<dynamic> userSignIn({
     String? countryCode,
     required String password,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     // try {
     final Response<dynamic> data = await postRequest(
       path: Urls.login,
       body: <String, dynamic>{
-        'country_code': countryCode,
+        // 'country_code': countryCode,
         'password': password,
-        'phone_number': phoneNumber,
+        // 'phone_number': phoneNumber,
+        'email': email,
       },
     );
 
@@ -466,14 +474,16 @@ class NetworkApi implements Api {
 
   @override
   Future<dynamic> verifyPhoneNumber({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String code,
   }) async {
     // try {
     final Response<dynamic> data = await postRequest(
-      path: Urls.verifyPhone,
+      path: Urls.verifyEmail,
       body: <String, dynamic>{
-        'phone_number': phoneNumber,
+        // 'phone_number': phoneNumber,
+        'email': email,
         'code': code,
       },
     );
@@ -488,14 +498,16 @@ class NetworkApi implements Api {
   @override
   Future<dynamic> verifyResetCode({
     required String code,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     // try {
     final Response<dynamic> data = await postRequest(
       path: Urls.verifyReset,
       body: <String, dynamic>{
         'code': code,
-        'phone_number': phoneNumber,
+        // 'phone_number': phoneNumber,
+        'email': email,
       },
     );
 
@@ -814,7 +826,6 @@ class NetworkApi implements Api {
             "markup": estimateItem.markup,
             "client_price_per_one": estimateItem.clientPricePerOne,
             "client_cost": estimateItem.clientCost,
-            "created_at": DateTime.now(),
           },
         },
       );
@@ -1090,6 +1101,30 @@ class NetworkApi implements Api {
   }
 
   @override
+  Future<dynamic> deleteChat({
+    required int chatId,
+    required String accessToken,
+  }) async {
+    try {
+      final Response<dynamic> data = await deleteRequest(
+        path: '${Urls.deleteChat}/$chatId',
+        body: <String, dynamic>{
+          'chat_id': chatId,
+        },
+        accessToken: accessToken,
+      );
+
+      return data.data;
+    } on DioException catch (e) {
+      log('ERROR in NETWORK_API => deleteChat $e');
+      if (e.response?.statusCode == 422) {
+        throw HTTPValidationException();
+      }
+      rethrow;
+    }
+  }
+
+  @override
   Future<dynamic> getAllChats({
     required String accessToken,
     int? projectId,
@@ -1139,13 +1174,13 @@ class NetworkApi implements Api {
     Object? metadata,
   }) async {
     try {
-      final Response<dynamic> data = await postRequest(
+      final Response<dynamic> data = await postMultipartRequest(
         path: Urls.sendMessage,
-        body: <String, dynamic>{
+        fields: {
           'chat_id': chatId,
           'content': content,
-          'metadata': metadata,
         },
+        files: [],
         accessToken: accessToken,
       );
 

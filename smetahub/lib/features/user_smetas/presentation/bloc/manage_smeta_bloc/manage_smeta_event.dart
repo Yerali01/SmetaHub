@@ -34,10 +34,10 @@ class ChangeEstimatePropertiesEvent extends ManageSmetaEvent {
   });
 }
 
-class AddEstimateItemEvent extends ManageSmetaEvent {
-  final String positionName;
+class SelectSortingTypeEvent extends ManageSmetaEvent {
+  final String sortingType;
 
-  final EstimateItemModel item;
-
-  AddEstimateItemEvent({required this.positionName, required this.item});
+  SelectSortingTypeEvent({
+    required this.sortingType,
+  });
 }

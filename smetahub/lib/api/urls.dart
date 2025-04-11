@@ -8,16 +8,23 @@ abstract class Urls {
   static const String _chat = '/api/chat';
 
   static const String logOut = '$_auth/logout';
-  static const String setPassword = '$_auth/set-password';
+  static const String setPassword = '$_auth/set-password-from-email';
   static const String me = '$_auth/me';
   static const String refresh = '$_auth/refresh';
-  static const String register = '$_auth/register';
-  static const String resetPasswordConfirm = '$_auth/reset-password/confirm';
-  static const String resetPasswordRequest = '$_auth/reset-password/request';
-  static const String sendVerification = '$_auth/send-verification';
+  // static const String register = '$_auth/register';
+  static const String register = '$_auth/register/from-email';
+  static const String resetPasswordConfirm =
+      '$_auth/reset-password/from-email/confirm';
+  // static const String resetPasswordRequest = '$_auth/reset-password/request';
+  static const String resetPasswordRequest =
+      '$_auth/reset-password/from-email/request';
+  // static const String sendVerification = '$_auth/send-verification';
+  static const String sendVerification = '$_auth/send-verification/from-email';
   static const String login = '$_auth/login';
-  static const String verifyPhone = '$_auth/verify-phone';
-  static const String verifyReset = '$_auth/reset-password/verify';
+  // static const String verifyPhone = '$_auth/verify-phone';
+  static const String verifyEmail = '$_auth/verify-email';
+  // static const String verifyReset = '$_auth/reset-password/verify';
+  static const String verifyReset = '$_auth/reset-password/from-email/verify';
 
   static const String createProjectName = '$_project/create';
   static const String selectObjectType = '$_project/update/object-type';
@@ -46,8 +53,9 @@ abstract class Urls {
   static const String addEstimateItem = '$_estimate/add/estimate-item';
   static const String generalEstimate = '$_estimate/generate/estimate';
 
-  static const String createChat = '$_chat';
-  static const String getAllChats = '$_chat';
-  static const String getChat = '$_chat';
+  static const String createChat = _chat;
+  static const String deleteChat = _chat;
+  static const String getAllChats = _chat;
+  static const String getChat = _chat;
   static const String sendMessage = '$_chat/send';
 }

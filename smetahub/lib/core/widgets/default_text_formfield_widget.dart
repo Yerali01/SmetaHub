@@ -28,6 +28,7 @@ class DefaultTextFormField extends StatefulWidget {
     this.maxLines,
     this.borderRadius = 8,
     this.isPhone = false,
+    this.isEmail = false,
     this.isPassword = false,
     this.hidePassword = false,
     this.isDense = true,
@@ -35,6 +36,7 @@ class DefaultTextFormField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.suffixOnTap,
+    this.suffixIconPadding,
     this.maxLength,
     this.showBorder = true,
     this.onFocusLost,
@@ -72,6 +74,7 @@ class DefaultTextFormField extends StatefulWidget {
   final int? maxLines;
   final double borderRadius;
   final bool isPhone;
+  final bool isEmail;
   final bool isPassword;
   final bool hidePassword;
   final bool? isDense;
@@ -79,6 +82,7 @@ class DefaultTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final VoidCallback? suffixOnTap;
+  final EdgeInsets? suffixIconPadding;
   final int? maxLength;
   final bool showBorder;
   final void Function(String)? onFocusLost;
@@ -214,12 +218,13 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
                 ? GestureDetector(
                     onTap: widget.suffixOnTap,
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 13.5.h,
-                        bottom: 13.5.h,
-                        right: 10.5.w,
-                        left: 11.5.w,
-                      ),
+                      padding: widget.suffixIconPadding ??
+                          EdgeInsets.only(
+                            top: 13.5.h,
+                            bottom: 13.5.h,
+                            right: 10.5.w,
+                            left: 11.5.w,
+                          ),
                       child: _buildSuffixIcon(),
                     ),
                   )
@@ -284,6 +289,9 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
   TextInputType _getKeyboardType() {
     if (widget.isPhone) {
       return TextInputType.phone;
+    }
+    if (widget.isEmail) {
+      return TextInputType.emailAddress;
     }
     if (widget.isNumber == true) {
       return TextInputType.number;

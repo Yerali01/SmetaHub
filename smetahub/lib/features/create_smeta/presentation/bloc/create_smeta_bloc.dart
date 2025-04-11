@@ -107,6 +107,7 @@ class CreateSmetaBloc extends Bloc<CreateSmetaEvent, CreateSmetaState> {
         for (int i = 0; i < res["work_types"].length; i++) {
           workTypes.add(WorkTypeModel.fromJson(res["work_types"][i]));
         }
+        _appRepository.workTypes.add(workTypes);
         emit(
           state.copyWith(
             workTypes: workTypes,
@@ -141,7 +142,7 @@ class CreateSmetaBloc extends Bloc<CreateSmetaEvent, CreateSmetaState> {
         }
       }
     } on Exception catch (e) {
-      log('Ошибка!!! _getWorkTypes = $e');
+      log('Ошибка!!! _selectSubspeciesWorkType = $e');
     }
   }
 
@@ -257,6 +258,7 @@ class CreateSmetaBloc extends Bloc<CreateSmetaEvent, CreateSmetaState> {
       );
 
       if (res['estimate_id'] != null) {
+        log('ESTIMATE GENERRATED');
         emit(
           state.copyWith(
             currentPage: state.currentPage + 1,

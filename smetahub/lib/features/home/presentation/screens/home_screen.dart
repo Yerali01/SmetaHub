@@ -387,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   Gap(4.w),
                                                   Text(
-                                                    '${state.projects[index].status}',
+                                                    '${state.projects[index].ruStatus}',
                                                     style: AppTypography
                                                         .caption1Regular
                                                         .copyWith(

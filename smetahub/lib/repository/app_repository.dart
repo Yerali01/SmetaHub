@@ -10,6 +10,7 @@ import 'package:smetahub/features/create_project/domain/models/object_condition_
 import 'package:smetahub/features/create_project/domain/models/object_type_model.dart';
 import 'package:smetahub/features/create_project/domain/models/project_category_model.dart';
 import 'package:smetahub/features/create_project/domain/models/project_model.dart';
+import 'package:smetahub/features/create_smeta/domain/models/work_type_model.dart';
 import 'package:smetahub/features/home/domain/entity/ai_consultant.dart';
 import 'package:smetahub/features/home/domain/entity/estimate_model.dart';
 import 'package:smetahub/features/home/domain/entity/unit_model.dart';
@@ -37,7 +38,11 @@ class AppRepository {
   BehaviorSubject<List<EstimateModel>> userEstimates =
       BehaviorSubject<List<EstimateModel>>();
 
+  BehaviorSubject<List<dynamic>> userChats = BehaviorSubject<List<dynamic>>();
+
   BehaviorSubject<List<UnitModel>> units = BehaviorSubject<List<UnitModel>>();
+  BehaviorSubject<List<WorkTypeModel>> workTypes =
+      BehaviorSubject<List<WorkTypeModel>>();
 
   BehaviorSubject<List<int>> userProjectIDs = BehaviorSubject<List<int>>();
 
@@ -71,13 +76,12 @@ class AppRepository {
   // }
 
   Future<void> userSignUp({
-    required String phoneNumber,
-    // required String password,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       await _networkHandler.userSignUp(
-        // password: password,
-        phoneNumber: phoneNumber,
+        email: email,
       );
     } on DioException catch (_) {
       errorHandlerState.add(ErrorHandlerModel(
@@ -107,13 +111,14 @@ class AppRepository {
   }
 
   Future<dynamic> userSignIn({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String password,
   }) async {
     // try {
     return await _networkHandler.userSignIn(
       password: password,
-      phoneNumber: phoneNumber,
+      email: email,
     );
     // } on DioException catch (_) {
     //   errorHandlerState.add(
@@ -141,9 +146,12 @@ class AppRepository {
   // }
 
   /// Отправка кода для регистрации - send-verification
-  Future<void> sendVerificationCode(String phoneNumber) async {
+  Future<void> sendVerificationCode({
+    // required String phoneNumber,
+    required String email,
+  }) async {
     try {
-      await _networkHandler.sendVerificationCode(phoneNumber: phoneNumber);
+      await _networkHandler.sendVerificationCode(email: email);
     } on DioException catch (_) {
       errorHandlerState.add(ErrorHandlerModel(
         errorTitle: 'AppRepository => sendVerificationCode ',
@@ -153,12 +161,13 @@ class AppRepository {
   }
 
   Future<dynamic> verifySignUpPhone({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String code,
   }) async {
     try {
       return await _networkHandler.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
+        email: email,
         code: code,
       );
     } on DioException catch (_) {
@@ -171,12 +180,13 @@ class AppRepository {
 
   Future<dynamic> verifyResetCode({
     required String code,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       return await _networkHandler.verifyResetCode(
         code: code,
-        phoneNumber: phoneNumber,
+        email: email,
       );
     } on DioException catch (_) {
       errorHandlerState.add(ErrorHandlerModel(
@@ -187,11 +197,13 @@ class AppRepository {
   }
 
   Future<dynamic> resetPasswordRequest({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     try {
       final message = await _networkHandler.resetPasswordRequest(
-        phoneNumber: phoneNumber,
+        // phoneNumber: phoneNumber,
+        email: email,
       );
 
       return message;
@@ -734,6 +746,25 @@ class AppRepository {
     } on DioException catch (_) {
       errorHandlerState.add(ErrorHandlerModel(
         errorTitle: 'AppRepository => createChat ',
+      ));
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deleteChat({
+    required int chatId,
+  }) async {
+    try {
+      if (accessToken.valueOrNull == null) {
+        //refresh token
+      } else {
+        final message = await _networkHandler.deleteChat(
+            chatId: chatId, accessToken: accessToken.value);
+        return message;
+      }
+    } on DioException catch (_) {
+      errorHandlerState.add(ErrorHandlerModel(
+        errorTitle: 'AppRepository => deleteChat ',
       ));
       rethrow;
     }

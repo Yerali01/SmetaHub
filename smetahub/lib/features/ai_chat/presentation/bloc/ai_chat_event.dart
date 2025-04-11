@@ -61,3 +61,21 @@ class InitAiChatScreenEvent extends AiChatEvent {
     required this.chatId,
   });
 }
+
+class ChangeChatEvent extends AiChatEvent {
+  final int chatId;
+
+  ChangeChatEvent({
+    required this.chatId,
+  });
+}
+
+class ShowDeleteChatOverlay extends AiChatEvent {}
+
+class DeleteChatEvent extends AiChatEvent {
+  final int chatId;
+
+  DeleteChatEvent({
+    required this.chatId,
+  });
+}

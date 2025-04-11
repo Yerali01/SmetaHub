@@ -37,9 +37,13 @@ class GoToResetPasswordEvent extends AuthEvent {
 }
 
 class SendSMSCodeEvent extends AuthEvent {
-  final String phoneNumber;
+  // final String phoneNumber;
+  final String email;
 
-  SendSMSCodeEvent({required this.phoneNumber});
+  SendSMSCodeEvent({
+    // required this.phoneNumber,
+    required this.email,
+  });
 }
 
 class VerifySMSCOdeEvent extends AuthEvent {
@@ -49,10 +53,12 @@ class VerifySMSCOdeEvent extends AuthEvent {
 }
 
 class SignUpUserEvent extends AuthEvent {
-  final String phoneNumber;
+  // final String phoneNumber;
+  final String email;
 
   SignUpUserEvent({
-    required this.phoneNumber,
+    // required this.phoneNumber,
+    required this.email,
   });
 }
 
@@ -65,11 +71,13 @@ class SetPasswordEvent extends AuthEvent {
 }
 
 class SignInUserEvent extends AuthEvent {
-  final String phoneNumber;
+  // final String phoneNumber;
+  final String email;
   final String password;
 
   SignInUserEvent({
-    required this.phoneNumber,
+    // required this.phoneNumber,
+    required this.email,
     required this.password,
   });
 }
@@ -123,9 +131,13 @@ class ResetPasswordCheckTwoPasswordsEvent extends AuthEvent {
 }
 
 class ResetPasswordRequestEvent extends AuthEvent {
-  final String phoneNumber;
+  // final String phoneNumber;
+  final String email;
 
-  ResetPasswordRequestEvent({required this.phoneNumber});
+  ResetPasswordRequestEvent({
+    // required this.phoneNumber,
+    required this.email,
+  });
 }
 
 class ResetPasswordVerifyCodeEvent extends AuthEvent {

@@ -9,6 +9,7 @@ class DefaultButtonWidget extends StatelessWidget {
     required this.onTap,
     required this.buttonText,
     this.buttonWidget,
+    this.height,
     this.width,
     this.textStyle,
     this.backgroundColor,
@@ -18,6 +19,7 @@ class DefaultButtonWidget extends StatelessWidget {
   final VoidCallback onTap;
   final String buttonText;
   final Widget? buttonWidget;
+  final double? height;
   final double? width;
   final TextStyle? textStyle;
   final Color? backgroundColor;
@@ -29,6 +31,7 @@ class DefaultButtonWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width ?? double.infinity,
+        height: height,
         decoration: BoxDecoration(
           color: backgroundColor ?? AppColors.buttonPrimaryBg,
           border: Border.all(

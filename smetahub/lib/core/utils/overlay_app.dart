@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:smetahub/core/utils/app_typography.dart';
 import 'package:smetahub/core/utils/colors.dart';
@@ -347,6 +348,205 @@ class OverlayApp {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  OverlayEntry createOverlayDeleteChat({
+    required BuildContext context,
+    required LayerLink layerLink,
+    required VoidCallback removeOverlay,
+    required VoidCallback onTapDelete,
+    required Offset offset,
+  }) {
+    return OverlayEntry(
+      maintainState: true,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: removeOverlay,
+                child: Container(
+                  color: AppColors.black800.withOpacity(0.5),
+                ),
+              ),
+            ),
+            Transform.translate(
+              offset: offset,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.uiBgPanels,
+                  borderRadius: BorderRadius.circular(13.r),
+                  border: Border.all(
+                    color: AppColors.uiSecondaryBorder,
+                  ),
+                ),
+                padding: EdgeInsets.only(
+                  top: 11.h,
+                  bottom: 11.h,
+                  left: 19.w,
+                ),
+                constraints: BoxConstraints(
+                  maxHeight: 45.h,
+                  maxWidth: 170.w,
+                ),
+                height: 44.h,
+                width: 169.w,
+                child: GestureDetector(
+                  onTap: onTapDelete,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_trash.svg',
+                        width: 18.w,
+                        height: 22.h,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.red700,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      Gap(13.w),
+                      Text(
+                        'Удалить',
+                        style: AppTypography.subheadsMedium.copyWith(
+                          color: AppColors.red700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  OverlayEntry createOverlayVerifiedDeleteChat({
+    required BuildContext context,
+    required LayerLink layerLink,
+    required VoidCallback removeOverlay,
+    required VoidCallback yesClick,
+    required VoidCallback noClick,
+  }) {
+    return OverlayEntry(
+      maintainState: true,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: removeOverlay,
+                child: Container(
+                  color: AppColors.black800.withOpacity(0.5),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: removeOverlay,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.uiBgPanels,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  constraints: BoxConstraints(
+                    maxHeight: 180.h,
+                    maxWidth: 345.w,
+                  ),
+                  height: 170.h,
+                  width: 345.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Gap(24.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.w),
+                        child: Text(
+                          'Вы действительно хотите удалить?',
+                          style: AppTypography.h5Bold.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      Gap(16.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.w),
+                        child: Text(
+                          'Подтвердите удаление',
+                          style: AppTypography.caption1Regular.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                      Gap(26.h),
+                      const Divider(
+                        color: AppColors.uiBorder,
+                        height: 1,
+                        thickness: 1,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: noClick,
+                            child: Container(
+                              width: 172.w,
+                              height: 48.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10.r),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Нет',
+                                  style: AppTypography.h5Bold.copyWith(
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 1.w,
+                            height: 48.h,
+                            color: AppColors.uiBorder,
+                          ),
+                          GestureDetector(
+                            onTap: yesClick,
+                            child: Container(
+                              width: 172.w,
+                              height: 48.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(10.r),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Да',
+                                  style: AppTypography.h5Bold.copyWith(
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

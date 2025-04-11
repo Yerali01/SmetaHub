@@ -141,7 +141,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     /// обновляем состояние
     emit(
       ShowResetPasswordState(
-        phoneNumber: '',
+        // phoneNumber: '',
+        email: '',
         code: '',
         currentPage: event.currentPage ?? 0,
         newHidePassword: false,
@@ -157,7 +158,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     /// обновляем состояние
     emit(
       ShowSignUpState(
-        phoneNumber: '',
+        // phoneNumber: '',
+        email: '',
         password: '',
         code: '',
         currentPage: event.currentPage ?? 0,
@@ -263,7 +265,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // if (state is ShowSignUpState) {
       // final ShowSignUpState state = this.state as ShowSignUpState;
       await _appRepository.sendVerificationCode(
-        event.phoneNumber,
+        // event.phoneNumber,
+        email: event.email,
       );
       // emit(
       // state.copyWith(
@@ -285,7 +288,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (state is ShowSignUpState) {
         final ShowSignUpState state = this.state as ShowSignUpState;
         final res = await _appRepository.verifySignUpPhone(
-          phoneNumber: state.phoneNumber,
+          // phoneNumber: state.phoneNumber,
+          email: state.email,
           code: event.code,
         );
 
@@ -296,7 +300,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(
             state.copyWith(
               codeVerified: true,
-              phoneNumber: state.phoneNumber,
+              // phoneNumber: state.phoneNumber,
+              email: state.email,
               code: event.code,
               currentPage: state.currentPage + 1,
             ),
@@ -327,12 +332,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (state is ShowSignUpState) {
         final ShowSignUpState state = this.state as ShowSignUpState;
         await _appRepository.userSignUp(
-          phoneNumber: event.phoneNumber,
-        );
+            // phoneNumber: event.phoneNumber,
+            email: event.email);
         emit(
           state.copyWith(
             currentPage: state.currentPage + 1,
-            phoneNumber: event.phoneNumber,
+            // phoneNumber: event.phoneNumber,
+            email: event.email,
           ),
         );
       }
@@ -348,7 +354,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final res = await _appRepository.userSignIn(
         password: event.password,
-        phoneNumber: event.phoneNumber,
+        // phoneNumber: event.phoneNumber,
+        email: event.email,
       );
 
       ShowSignInState state = this.state as ShowSignInState;
@@ -510,12 +517,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final ShowResetPasswordState state =
             this.state as ShowResetPasswordState;
         final res = await _appRepository.resetPasswordRequest(
-          phoneNumber: event.phoneNumber,
+          // phoneNumber: event.phoneNumber,
+          email: event.email,
         );
         if (res["success"] == true) {
           emit(
             state.copyWith(
-              phoneNumber: event.phoneNumber,
+              // phoneNumber: event.phoneNumber,
+              email: event.email,
               currentPage: state.currentPage + 1,
             ),
           );
@@ -536,7 +545,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             this.state as ShowResetPasswordState;
         final res = await _appRepository.verifyResetCode(
           code: event.code,
-          phoneNumber: state.phoneNumber,
+          // phoneNumber: state.phoneNumber,
+          email: state.email,
         );
 
         if (res.data["access_token"] != null) {
@@ -546,7 +556,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(
             state.copyWith(
               codeVerified: true,
-              phoneNumber: state.phoneNumber,
+              // phoneNumber: state.phoneNumber,
+              email: state.email,
               code: event.code,
               currentPage: state.currentPage + 1,
             ),

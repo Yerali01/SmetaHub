@@ -27,7 +27,7 @@ class SignInScreen extends StatelessWidget {
     OverlayEntry? _overlaySuspiciousEntry;
     final LayerLink _layerLinkSuspicious = LayerLink();
 
-    TextEditingController phoneController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
@@ -123,9 +123,11 @@ class SignInScreen extends StatelessWidget {
                   ),
                   Gap(42.h),
                   DefaultTextFormField(
-                    isPhone: true,
-                    controller: phoneController,
-                    hintText: 'Номер телефона',
+                    // isPhone: true,
+                    isEmail: true,
+                    // controller: phoneController,
+                    controller: emailController,
+                    hintText: 'Почта',
                     isError: state.textfieldError,
                   ),
                   Gap(12.h),
@@ -178,8 +180,9 @@ class SignInScreen extends StatelessWidget {
                     onTap: () {
                       context.read<AuthBloc>().add(
                             SignInUserEvent(
-                              phoneNumber:
-                                  phoneController.text.replaceAll(" ", ''),
+                              // phoneNumber:
+                              //     phoneController.text.replaceAll(" ", ''),
+                              email: emailController.text,
                               password: passwordController.text,
                             ),
                           );

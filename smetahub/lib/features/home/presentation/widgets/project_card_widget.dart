@@ -109,33 +109,33 @@ class ProjectCardWidget extends StatelessWidget {
                       ContainerTextWidget(
                         text: '${project.technicalConditions?.area} м²',
                       ),
-                    if (project.technicalConditions?.area != null)
-                      ContainerTextWidget(
-                          text: '',
-                          bgColor: AppColors.blue700A18,
-                          childWidget: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/icons/ic_paper_list.svg',
-                                width: 7.w,
-                                height: 9.h,
-                                colorFilter: const ColorFilter.mode(
-                                  AppColors.blue700,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                              Gap(8.w),
-                              Text(
-                                '${project.technicalConditions?.area} м²',
-                                style: AppTypography.subheadsMedium.copyWith(
-                                  color: AppColors.blue700,
-                                ),
-                              ),
-                            ],
-                          )),
+                    ContainerTextWidget(
+                      text: '',
+                      bgColor: AppColors.blue700A18,
+                      childWidget: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/ic_paper_list.svg',
+                            width: 7.w,
+                            height: 9.h,
+                            colorFilter: const ColorFilter.mode(
+                              AppColors.blue700,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          Gap(8.w),
+                          Text(
+                            '${project.ruStatus}',
+                            style: AppTypography.subheadsMedium.copyWith(
+                              color: AppColors.blue700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

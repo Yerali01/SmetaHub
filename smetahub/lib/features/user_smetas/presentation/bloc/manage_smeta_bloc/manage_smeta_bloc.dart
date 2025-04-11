@@ -23,8 +23,7 @@ class ManageSmetaBloc extends Bloc<ManageSmetaEvent, ManageSmetaState> {
     on<UpdateEstimateItemsEvent>(_updateEstimateItems);
 
     on<ChangeEstimatePropertiesEvent>(_changeEstimateQuantity);
-
-    on<AddEstimateItemEvent>(_addEstimateItem);
+    on<SelectSortingTypeEvent>(_selectSortingType);
   }
 
   final AppRepository _appRepository;
@@ -138,8 +137,6 @@ class ManageSmetaBloc extends Bloc<ManageSmetaEvent, ManageSmetaState> {
         )
       ];
 
-      log('CHANGED GOOD ${state.estimateItems[0][1].cost}');
-
       emit(state.copyWith());
 
       // log('ESTIMATE ITEM $estimateItem $changingIndex');
@@ -148,22 +145,18 @@ class ManageSmetaBloc extends Bloc<ManageSmetaEvent, ManageSmetaState> {
     }
   }
 
-  Future<void> _addEstimateItem(
-    final AddEstimateItemEvent event,
+  Future<void> _selectSortingType(
+    final SelectSortingTypeEvent event,
     final Emitter<ManageSmetaState> emit,
   ) async {
     try {
       final ShowManageSmetaState state = this.state as ShowManageSmetaState;
-      final res = await _appRepository.addEstimateItem(
-        estimateId: state.estimateId,
-        estimateItem: event.item,
-      );
 
-      if (res["estimate_item"] != null) {
-        emit(
-          AddEstimateItemSuccessState(),
-        );
-      }
+      emit(
+        state.copyWith(
+          sortingType: event.sortingType,
+        ),
+      );
     } on Exception catch (e) {
       log('Ошибка!!! _addEstimateItem = $e');
     }

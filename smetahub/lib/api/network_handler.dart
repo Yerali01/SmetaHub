@@ -56,58 +56,70 @@ class NetworkHandler {
   }
 
   Future<dynamic> resetPasswordRequest({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     return _networkApi.resetPasswordRequest(
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
+      email: email,
     );
   }
 
-  Future<dynamic> sendVerificationCode({required String phoneNumber}) async {
+  Future<dynamic> sendVerificationCode({
+    // required String phoneNumber,
+    required String email,
+  }) async {
     return _networkApi.sendVerificationCode(
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
+      email: email,
     );
   }
 
   Future<void> userSignUp({
     String? countryCode,
-    // required String password,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     await _networkApi.userSignUp(
-      // password: password,
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
+      email: email,
     );
   }
 
   Future<dynamic> userSignIn({
     String? countryCode,
     required String password,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     return await _networkApi.userSignIn(
       password: password,
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
+      email: email,
     );
   }
 
   Future<dynamic> verifyPhoneNumber({
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
     required String code,
   }) async {
     return await _networkApi.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+      // phoneNumber: phoneNumber,
+      email: email,
       code: code,
     );
   }
 
   Future<dynamic> verifyResetCode({
     required String code,
-    required String phoneNumber,
+    // required String phoneNumber,
+    required String email,
   }) async {
     return await _networkApi.verifyResetCode(
       code: code,
-      phoneNumber: phoneNumber,
+      email: email,
+      // phoneNumber: phoneNumber,
     );
   }
 
@@ -355,6 +367,16 @@ class NetworkHandler {
       title: title,
       projectId: projectId,
       aiAgentId: aiAgentId,
+      accessToken: accessToken,
+    );
+  }
+
+  Future<dynamic> deleteChat({
+    required int chatId,
+    required String accessToken,
+  }) async {
+    return await _networkApi.deleteChat(
+      chatId: chatId,
       accessToken: accessToken,
     );
   }

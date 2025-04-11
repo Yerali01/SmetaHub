@@ -37,7 +37,8 @@ class ShowSignInState extends AuthState {
 class ShowResetPasswordState extends AuthState {
   ShowResetPasswordState({
     required this.currentPage,
-    required this.phoneNumber,
+    // required this.phoneNumber,
+    required this.email,
     required this.code,
     this.codeVerified = false,
     required this.newHidePassword,
@@ -49,7 +50,8 @@ class ShowResetPasswordState extends AuthState {
   });
 
   final int currentPage;
-  final String phoneNumber;
+  // final String phoneNumber;
+  final String email;
   final String code;
 
   final bool? codeVerified;
@@ -65,7 +67,8 @@ class ShowResetPasswordState extends AuthState {
 
   ShowResetPasswordState copyWith({
     int? currentPage,
-    String? phoneNumber,
+    // String? phoneNumber,
+    String? email,
     String? code,
     bool? codeVerified,
     bool? newHidePassword,
@@ -77,7 +80,8 @@ class ShowResetPasswordState extends AuthState {
   }) {
     return ShowResetPasswordState(
       currentPage: currentPage ?? this.currentPage,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      // phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email ?? this.email,
       code: code ?? this.code,
       codeVerified: codeVerified ?? this.codeVerified,
       newHidePassword: newHidePassword ?? this.newHidePassword,
@@ -93,7 +97,8 @@ class ShowResetPasswordState extends AuthState {
 
 class ShowSignUpState extends AuthState {
   ShowSignUpState({
-    required this.phoneNumber,
+    // required this.phoneNumber,
+    required this.email,
     required this.password,
     required this.code,
     this.codeVerified = false,
@@ -107,7 +112,8 @@ class ShowSignUpState extends AuthState {
     this.isSuspiciousAction = false,
   });
 
-  final String phoneNumber;
+  final String email;
+  // final String phoneNumber;
   final String password;
   final String code;
 
@@ -126,7 +132,8 @@ class ShowSignUpState extends AuthState {
   final bool isSuspiciousAction;
 
   ShowSignUpState copyWith({
-    String? phoneNumber,
+    // String? phoneNumber,
+    String? email,
     String? password,
     String? code,
     bool? codeVerified,
@@ -140,7 +147,8 @@ class ShowSignUpState extends AuthState {
     bool? isSuspiciousAction,
   }) {
     return ShowSignUpState(
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      // phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email ?? this.email,
       password: password ?? this.password,
       code: code ?? this.code,
       codeVerified: codeVerified ?? this.codeVerified,

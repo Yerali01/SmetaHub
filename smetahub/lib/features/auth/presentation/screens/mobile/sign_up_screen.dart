@@ -28,7 +28,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
 
-  final TextEditingController phoneController = TextEditingController();
+  // final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordSecondController =
       TextEditingController();
@@ -95,26 +96,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SignUpAppbar(percentage: 0),
                     Gap(22.h),
                     Text(
-                      'Введите свой номер телефона',
+                      'Введите свою почту',
                       style: AppTypography.h5Bold
                           .copyWith(color: AppColors.textPrimary),
                     ),
                     Gap(24.h),
+                    // DefaultTextFormField(
+                    //   isPhone: true,
+                    //   hintText: 'Номер телефона',
+                    //   controller: phoneController,
+                    // ),
                     DefaultTextFormField(
-                      isPhone: true,
-                      hintText: 'Номер телефона',
-                      controller: phoneController,
+                      isEmail: true,
+                      hintText: 'email',
+                      controller: emailController,
                     ),
                     const Spacer(),
                     DefaultButtonWidget(
                       onTap: () {
-                        log('phoneController.text.length ${phoneController.text}');
-                        if (phoneController.text.length == 16) {
+                        // log('phoneController.text.length ${phoneController.text}');
+                        // if (phoneController.text.length == 16) {
+                        //   context.read<AuthBloc>().add(
+                        //         SignUpUserEvent(
+                        //           phoneNumber:
+                        //               phoneController.text.replaceAll(" ", ''),
+                        //         ),
+                        //       );
+                        // }
+                        if (emailController.text.isNotEmpty) {
                           context.read<AuthBloc>().add(
                                 SignUpUserEvent(
-                                  phoneNumber:
-                                      phoneController.text.replaceAll(" ", ''),
-                                ),
+                                    // phoneNumber:
+                                    //     phoneController.text.replaceAll(" ", ''),
+                                    email: emailController.text),
                               );
                         }
                       },
@@ -148,13 +162,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     RichText(
                       text: TextSpan(
                         text:
-                            'Введите код отправленный\nна ваш номер телефона ',
+                            // 'Введите код отправленный\nна ваш номер телефона ',
+                            'Введите код отправленный\nна вашу почту ',
                         style: AppTypography.bodyRegular.copyWith(
                           color: AppColors.textPrimary,
                         ),
                         children: [
                           TextSpan(
-                            text: phoneController.text,
+                            // text: phoneController.text,
+                            text: emailController.text,
                             style: AppTypography.bodyMedium
                                 .copyWith(color: AppColors.textPrimary),
                           ),
@@ -177,7 +193,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     GestureDetector(
                       onTap: () {
                         context.read<AuthBloc>().add(
-                              SendSMSCodeEvent(phoneNumber: state.phoneNumber),
+                              SendSMSCodeEvent(
+                                  // phoneNumber: state.phoneNumber,
+                                  email: state.email),
                             );
                       },
                       child: Container(

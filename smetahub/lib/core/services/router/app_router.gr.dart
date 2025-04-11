@@ -152,18 +152,43 @@ class AuthWrapperRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [CreateEstimateItemScreen]
-class CreateEstimateItemRoute extends PageRouteInfo<void> {
-  const CreateEstimateItemRoute({List<PageRouteInfo>? children})
-    : super(CreateEstimateItemRoute.name, initialChildren: children);
+class CreateEstimateItemRoute
+    extends PageRouteInfo<CreateEstimateItemRouteArgs> {
+  CreateEstimateItemRoute({
+    Key? key,
+    required int estimateId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CreateEstimateItemRoute.name,
+         args: CreateEstimateItemRouteArgs(key: key, estimateId: estimateId),
+         initialChildren: children,
+       );
 
   static const String name = 'CreateEstimateItemRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const CreateEstimateItemScreen();
+      final args = data.argsAs<CreateEstimateItemRouteArgs>();
+      return CreateEstimateItemScreen(
+        key: args.key,
+        estimateId: args.estimateId,
+      );
     },
   );
+}
+
+class CreateEstimateItemRouteArgs {
+  const CreateEstimateItemRouteArgs({this.key, required this.estimateId});
+
+  final Key? key;
+
+  final int estimateId;
+
+  @override
+  String toString() {
+    return 'CreateEstimateItemRouteArgs{key: $key, estimateId: $estimateId}';
+  }
 }
 
 /// generated route for

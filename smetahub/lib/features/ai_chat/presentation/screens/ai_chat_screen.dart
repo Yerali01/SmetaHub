@@ -1,26 +1,27 @@
 import 'package:fancy_border/fancy_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smetahub/core/services/router/app_router.dart';
 import 'package:smetahub/core/utils/app_typography.dart';
 import 'package:smetahub/core/utils/colors.dart';
+import 'package:smetahub/core/utils/overlay_app.dart';
+import 'package:smetahub/core/widgets/default_text_formfield_widget.dart';
 import 'package:smetahub/features/ai_chat/domain/message_model.dart';
 import 'package:smetahub/features/ai_chat/presentation/widgets/default_icon_button_widget.dart';
 import 'package:smetahub/features/home/domain/entity/ai_consultant.dart';
-import 'package:smetahub/features/home/presentation/bloc/home_bloc.dart';
 
 import '../bloc/ai_chat_bloc.dart';
 
 @RoutePage()
 class AiChatScreen extends StatefulWidget {
-  const AiChatScreen({
-    super.key,
-  });
+  const AiChatScreen({super.key});
 
   @override
   State<AiChatScreen> createState() => _AiChatScreenState();
@@ -29,6 +30,14 @@ class AiChatScreen extends StatefulWidget {
 class _AiChatScreenState extends State<AiChatScreen> {
   late TextEditingController _messageController;
   final FocusNode _messageFocusNode = FocusNode();
+
+  OverlayEntry? _overlayEntry;
+  final LayerLink _layerLink = LayerLink();
+
+  OverlayEntry? _overlayEntryDelete;
+  final LayerLink _layerLinkDelete = LayerLink();
+
+  Offset? tapOffset;
 
   @override
   void initState() {
@@ -43,8 +52,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
     super.dispose();
   }
 
-  void _sendMessage({required int? chatId}) {
-    if (_messageController.text.trim().isNotEmpty && chatId != null) {
+  void _sendMessage({required int chatId}) {
+    if (_messageController.text.trim().isNotEmpty) {
       context.read<AiChatBloc>().add(
             SendMessageEvent(
               chatId: chatId,
@@ -61,6 +70,225 @@ class _AiChatScreenState extends State<AiChatScreen> {
     return Scaffold(
       backgroundColor: AppColors.uiBackground,
       appBar: _buildAppBar(context),
+      drawer: Drawer(
+        backgroundColor: AppColors.uiBgPanels,
+        width: 285.w,
+        child: BlocBuilder<AiChatBloc, AiChatState>(
+          builder: (BuildContext context, AiChatState state) {
+            if (state is ShowAiChatState) {
+              Map<DateTime, List<dynamic>> groupedUserChats =
+                  state.groupedUserChats;
+
+              List<DateTime> groupedChatKeys =
+                  state.groupedUserChats.keys.toList();
+
+              return SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    Gap(50.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.w),
+                      child: DefaultTextFormField(
+                        height: 44.h,
+                        hintText: 'Поиск',
+                        controller: TextEditingController(),
+                        suffixOnTap: () {},
+                        suffixIcon: SvgPicture.asset(
+                          'assets/icons/ic_search.svg',
+                          width: 24.w,
+                          height: 24.h,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.textPrimary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Gap(6.h),
+                    Container(
+                      width: 285.w,
+                      height: 1.h,
+                      color: AppColors.uiBorder,
+                    ),
+                    Gap(14.h),
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(horizontal: 15.w)
+                            .copyWith(bottom: 25.h),
+                        children: [
+                          Text(
+                            'История чатов',
+                            style: AppTypography.headlineMedium.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Gap(20.h),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: groupedChatKeys.length,
+                            separatorBuilder: (context, _) => Gap(18.h),
+                            itemBuilder: (BuildContext context, int keyIndex) {
+                              final String date = DateFormat('dd.MM.yy')
+                                  .format(groupedChatKeys[keyIndex]);
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    date,
+                                    style:
+                                        AppTypography.subheadsRegular.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                  Gap(12.h),
+                                  ListView.separated(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.only(
+                                      left: 8.w,
+                                    ),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: groupedUserChats[
+                                                groupedChatKeys[keyIndex]]
+                                            ?.length ??
+                                        0,
+                                    separatorBuilder: (context, _) => Gap(1.h),
+                                    itemBuilder: (context, valueIndex) {
+                                      bool isSelected = groupedUserChats[
+                                                      groupedChatKeys[keyIndex]]
+                                                  ?[valueIndex]
+                                              .chatId ==
+                                          state.chatId;
+                                      return GestureDetector(
+                                        onTap: () {
+                                          context.read<AiChatBloc>().add(
+                                                ChangeChatEvent(
+                                                  chatId: groupedUserChats[
+                                                              groupedChatKeys[
+                                                                  keyIndex]]
+                                                          ?[valueIndex]
+                                                      .chatId,
+                                                ),
+                                              );
+                                          context.router.pop();
+                                        },
+                                        onTapDown: (details) {
+                                          setState(() {
+                                            tapOffset = details.globalPosition;
+                                          });
+                                        },
+                                        onLongPress: () {
+                                          double calculatedX = 100.w;
+                                          double calculatedY =
+                                              (tapOffset?.dy ?? 50.h) + 10.h;
+                                          _overlayEntry = OverlayApp()
+                                              .createOverlayDeleteChat(
+                                            offset: Offset(
+                                                calculatedX, calculatedY),
+                                            context: context,
+                                            layerLink: _layerLink,
+                                            removeOverlay: () {
+                                              _overlayEntry!.remove();
+                                            },
+                                            onTapDelete: () {
+                                              _overlayEntry!.remove();
+
+                                              _overlayEntryDelete = OverlayApp()
+                                                  .createOverlayVerifiedDeleteChat(
+                                                context: context,
+                                                layerLink: _layerLinkDelete,
+                                                removeOverlay: () {
+                                                  _overlayEntryDelete!.remove();
+                                                },
+                                                noClick: () {
+                                                  _overlayEntryDelete!.remove();
+                                                },
+                                                yesClick: () {
+                                                  context
+                                                      .read<AiChatBloc>()
+                                                      .add(
+                                                        DeleteChatEvent(
+                                                          chatId: groupedUserChats[
+                                                                      groupedChatKeys[
+                                                                          keyIndex]]
+                                                                  ?[valueIndex]
+                                                              .chatId,
+                                                        ),
+                                                      );
+                                                  context
+                                                      .read<AiChatBloc>()
+                                                      .add(
+                                                        GetUserChatsEvent(),
+                                                      );
+                                                  _overlayEntryDelete!.remove();
+                                                },
+                                              );
+                                              Overlay.of(context)
+                                                  .insert(_overlayEntryDelete!);
+                                            },
+                                          );
+                                          Overlay.of(context)
+                                              .insert(_overlayEntry!);
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.r),
+                                                color: isSelected
+                                                    ? AppColors
+                                                        .buttonSecondaryPressed
+                                                    : AppColors.transparent,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.w),
+                                              height: 32.h,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    '${groupedUserChats[groupedChatKeys[keyIndex]]?[valueIndex].title}',
+                                                    style: AppTypography
+                                                        .caption1Regular
+                                                        .copyWith(
+                                                      color:
+                                                          AppColors.textPrimary,
+                                                    ),
+                                                    maxLines: 1,
+                                                    softWrap: true,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
       body: BlocConsumer<AiChatBloc, AiChatState>(
         listener: (BuildContext context, AiChatState state) {},
         builder: (BuildContext context, AiChatState state) {
@@ -105,7 +333,6 @@ class _AiChatScreenState extends State<AiChatScreen> {
               return Column(
                 children: [
                   _buildMessageItem(message: message),
-                  // if (state.isLoading && index == state.messages.length - 1)
                   if (state.isLoading && index == state.messages.length - 1)
                     Gap(24.h),
                   if (state.isLoading && index == state.messages.length - 1)
@@ -144,9 +371,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
   }
 
   Widget _buildMessageItem({
-    required Message message,
+    required MessageModel message,
   }) {
-    return message.isUserMessage
+    return message.role == 'user'
         ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -169,7 +396,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                   ),
                 ),
                 child: Text(
-                  message.text,
+                  '${message.content["text"]}',
                   style: AppTypography.subheadsRegular.copyWith(
                     color: AppColors.textPrimary,
                   ),
@@ -190,11 +417,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 decoration: const BoxDecoration(
                   color: AppColors.transparent,
                 ),
-                child: Text(
-                  message.text,
-                  style: AppTypography.subheadsRegular.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
+                child: Html(
+                  data: '${message.content["text"]}',
+                  style: const {},
                 ),
               ),
             ],
@@ -208,9 +433,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
       elevation: 0,
       centerTitle: true,
       title: BlocConsumer<AiChatBloc, AiChatState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is ShowAiChatState) {
             return SizedBox(
@@ -219,7 +442,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
                     child: const DefaultIconButtonWidget(
                       icon: 'assets/icons/ic_paper_list.svg',
                       iconWidth: 14.31,
@@ -242,32 +467,39 @@ class _AiChatScreenState extends State<AiChatScreen> {
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      context.read<AiChatBloc>().add(
-                            CreateNewChatEvent(
-                              title: '',
-                              aiAgentId: state.selectedAgentId ??
-                                  state.selectedAiAgent!.id,
-                            ),
-                          );
-                    },
-                    child: DefaultIconButtonWidget(
-                      icon: 'assets/icons/ic_add_chat.svg',
-                      iconWidth: 19.w,
-                      iconHeight: 19.h,
-                    ),
-                  ),
-                  Gap(8.w),
-                  GestureDetector(
-                    onTap: () {
-                      context.router.navigate(const HomeWrapperRoute());
-                    },
-                    child: DefaultIconButtonWidget(
-                      icon: 'assets/icons/ic_close.svg',
-                      iconWidth: 12.w,
-                      iconHeight: 12.h,
-                    ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.read<AiChatBloc>().add(
+                                CreateNewChatEvent(
+                                  title: '',
+                                  aiAgentId: state.selectedAgentId ??
+                                      state.selectedAiAgent!.id,
+                                ),
+                              );
+                          context.read<AiChatBloc>().add(
+                                GetUserChatsEvent(),
+                              );
+                        },
+                        child: DefaultIconButtonWidget(
+                          icon: 'assets/icons/ic_add_chat.svg',
+                          iconWidth: 19.w,
+                          iconHeight: 19.h,
+                        ),
+                      ),
+                      Gap(8.w),
+                      GestureDetector(
+                        onTap: () {
+                          context.router.navigate(const HomeWrapperRoute());
+                        },
+                        child: DefaultIconButtonWidget(
+                          icon: 'assets/icons/ic_close.svg',
+                          iconWidth: 12.w,
+                          iconHeight: 12.h,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -506,10 +738,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
               ),
               border: InputBorder.none,
             ),
-            onChanged: (String value) {
-              setState(() {});
-            },
-            onFieldSubmitted: (_) => _sendMessage(chatId: chatId),
+            onChanged: (String value) {},
+            onFieldSubmitted: (_) => _sendMessage(chatId: chatId!),
             style: AppTypography.headlineRegular.copyWith(
               color: AppColors.textPrimary,
             ),
@@ -660,7 +890,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
     } else if (isTyping) {
       return GestureDetector(
         onTap: () {
-          _sendMessage(chatId: chatId);
+          _sendMessage(chatId: chatId!);
         },
         child: Container(
           width: 34.w,
